@@ -1,5 +1,6 @@
 package com.mirea.kt.ribo.messenger.friends;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,12 +20,11 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mirea.kt.ribo.messenger.ChatActivity;
 import com.mirea.kt.ribo.messenger.R;
-import com.mirea.kt.ribo.messenger.chats.Chat;
-import com.mirea.kt.ribo.messenger.chats.ChatAdapter;
 import com.mirea.kt.ribo.messenger.databinding.FragmentFriendsBinding;
 import com.mirea.kt.ribo.messenger.users.User;
-import com.mirea.kt.ribo.messenger.users.UserAdapter;
+import com.mirea.kt.ribo.messenger.utils.ChatUtil;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -59,16 +59,26 @@ public class FriendsFragment extends Fragment {
                 for (String friendsId : friendsIds) {
                     DataSnapshot usersSnapshot = snapshot.child("Users").child(friendsId);
 
-                    String userId = usersSnapshot.getValue().toString();
-                    String username = usersSnapshot.child("username").getValue().toString();
-                    String profile_image = usersSnapshot.child("profile_image").getValue().toString();
+                    String userId = usersSnapshot.getKey();
+                    String username = Objects.requireNonNull(usersSnapshot.child("username").getValue()).toString();
+                    String profile_image = Objects.requireNonNull(usersSnapshot.child("profile_image").getValue()).toString();
 
                     friends.add(new User(userId, username, profile_image));
                 }
 
                 if (!friends.isEmpty()) {
                     binding.friends.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-                    binding.friends.setAdapter(new FriendsAdapter(friends));
+                    binding.friends.setAdapter(new FriendsAdapter(friends, new FriendsAdapter.OnFriendClickListener() {
+                        @Override
+                        public void onFriendClickListener(User user, int position) {
+                            if (!ChatUtil.isExistingChat(user)) {
+                                ChatUtil.createChat(user);
+                            }
+                            Intent intent = new Intent(getContext(), ChatActivity.class);
+                            intent.putExtra("chatId", ChatUtil.getChatId(user));
+                            startActivity(new Intent(intent));
+                        }
+                    }));
                 } else {
                     binding.friends.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 }

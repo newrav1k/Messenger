@@ -3,10 +3,9 @@
     <item
         android:id="@+id/chats"
         android:title="@string/yours_chats"
-        android:icon="@drawable/baseline_chat_24"/>
-
+        android:icon="@drawable/chat_top_navigation"/>
     <item
         android:id="@+id/users"
         android:title="@string/all_users"
-        android:icon="@drawable/baseline_people_outline_24"/>
+        android:icon="@drawable/friends_top_navigation"/>
 </menu>

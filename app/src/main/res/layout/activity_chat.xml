@@ -50,8 +50,8 @@
                 android:id="@+id/add_friend_button"
                 android:layout_width="50sp"
                 android:layout_height="40sp"
-                android:src="@drawable/not_added_as_a_friend"
                 android:background="@color/cardview_dark_background"
+                android:src="@drawable/not_added_as_a_friend"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/toolbar"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -78,6 +78,12 @@
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
+            <ImageButton
+                android:layout_width="50sp"
+                android:layout_height="match_parent"
+                android:src="@drawable/insert_photo"
+                android:background="@color/cardview_dark_background"/>
+
             <EditText
                 android:id="@+id/enter_message"
                 android:layout_width="match_parent"
@@ -91,9 +97,9 @@
                 android:id="@+id/send_message"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="8"
+                android:layout_weight="3.5"
                 android:background="@color/cardview_dark_background"
-                android:src="@drawable/baseline_send_24"/>
+                android:src="@drawable/send_message"/>
 
         </LinearLayout>
 

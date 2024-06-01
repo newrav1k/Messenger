@@ -64,7 +64,6 @@ public class UsersFragment extends Fragment {
                             public void onUserClickListener(User user, int position) {
                                 if (!ChatUtil.isExistingChat(user)) {
                                     ChatUtil.createChat(user);
-//                                    В этом коде всяк ошибка
                                 }
                                 Intent intent = new Intent(getContext(), ChatActivity.class);
                                 intent.putExtra("chatId", ChatUtil.getChatId(user));

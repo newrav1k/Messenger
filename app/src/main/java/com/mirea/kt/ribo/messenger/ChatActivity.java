@@ -57,14 +57,14 @@ public class ChatActivity extends AppCompatActivity {
         updateView(chatId);
 
         binding.sendMessage.setOnClickListener(v -> {
-            String message = binding.enterMessage.getText().toString();
+            String message = binding.enterMessage.getText().toString().trim();
             if (message.isEmpty()) {
                 Toast.makeText(getApplicationContext(), R.string.message_input_field_cannot_be_empty, Toast.LENGTH_LONG).show();
                 return;
             }
 
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH.mm");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
             String date = simpleDateFormat.format(new Date());
 
             binding.enterMessage.setText("");
@@ -83,7 +83,6 @@ public class ChatActivity extends AppCompatActivity {
     private void updateView(String chatId) {
         uploadMessages(chatId);
         uploadPartnerInfo();
-        uploadFriendStatus();
     }
 
     public void sendMessage(String chatId, String message, String date) {
@@ -198,12 +197,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-
-
-    }
-
-    private void uploadFriendStatus() {
-
     }
 
     @Override

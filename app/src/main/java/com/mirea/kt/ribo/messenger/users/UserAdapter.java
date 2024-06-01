@@ -9,13 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.mirea.kt.ribo.messenger.R;
-import com.mirea.kt.ribo.messenger.utils.ChatUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -54,7 +50,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             holder.profile_image.setImageResource(R.drawable.anime_icon);
         }
 
-        holder.itemView.setOnClickListener(v -> ChatUtil.createChat(user));
+        holder.itemView.setOnClickListener(v -> onUserClickListener.onUserClickListener(user, holder.getAdapterPosition()));
     }
 
     @Override

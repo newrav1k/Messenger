@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,10 +22,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
 
-    private ArrayList<User> users;
+    public interface OnFriendClickListener {
+        void onFriendClickListener(User user, int position);
+    }
 
-    public FriendsAdapter(ArrayList<User> users) {
+    private ArrayList<User> users;
+    private final OnFriendClickListener onFriendClickListener;
+
+    public FriendsAdapter(ArrayList<User> users, OnFriendClickListener onFriendClickListener) {
         this.users = users;
+        this.onFriendClickListener = onFriendClickListener;
     }
 
     @NonNull
@@ -38,14 +44,19 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = users.get(position);
-
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(uid).child("friends")
+                .child("Users").child(user.getUserId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        holder.username.setText(snapshot.child("username").getValue().toString());
 
+                        String profile_image = snapshot.child("profile_image").getValue().toString();
+                        if (!profile_image.isEmpty()) {
+                            Glide.with(holder.itemView.getContext()).load(profile_image).into(holder.profile_image);
+                        } else {
+                            holder.profile_image.setImageResource(R.drawable.anime_icon);
+                        }
                     }
 
                     @Override
@@ -53,6 +64,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
                     }
                 });
+        holder.itemView.setOnClickListener(v -> onFriendClickListener.onFriendClickListener(user, holder.getAdapterPosition()));
     }
 
     @Override

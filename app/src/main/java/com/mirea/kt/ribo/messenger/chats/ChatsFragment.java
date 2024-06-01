@@ -54,7 +54,6 @@ public class ChatsFragment extends Fragment {
 
                     String chatUserId = uid.equals(userId1) ? userId2 : userId1;
 
-
                     String chat_name = Objects.requireNonNull(snapshot.child("Users").child(chatUserId).child("username").getValue()).toString();
 
                     chats.add(new Chat(chatId, chat_name, userId1, userId2));

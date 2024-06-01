@@ -2,11 +2,17 @@ package com.mirea.kt.ribo.messenger.utils;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mirea.kt.ribo.messenger.R;
+import com.mirea.kt.ribo.messenger.users.User;
+
+import java.util.Objects;
 
 public class FriendUtil {
 
@@ -35,6 +41,9 @@ public class FriendUtil {
     }
 
     private static String updateFriends(String str, String userId) {
+        if (str.contains(userId)) {
+            return str;
+        }
         if (str.isEmpty()) {
             str += userId;
         } else {
