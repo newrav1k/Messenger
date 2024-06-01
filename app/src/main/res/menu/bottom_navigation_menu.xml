@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_person"
+        android:title="@string/action_person"
+        android:icon="@drawable/ic_action_person"/>
+    <item
+        android:id="@+id/action_mail_outline"
+        android:title="@string/action_mail_outline"
+        android:icon="@drawable/ic_action_mail_outline"/>
+    <item
+        android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_action_settings" />
+</menu>

@@ -1,0 +1,68 @@
+<resources>
+    <string name="app_name">Мессенджер</string>
+    <string name="developers">Крицкий Кирилл Сергеевич\nНисанов Даниил Андреевич\nРИБО–04–22</string>
+    <string name="task">Индивидуальное задание. Разработать Android-приложение для обмена текстовыми сообщениями между пользователями.</string>
+
+    <string name="student_login">Логин студента</string>
+    <string name="student_password">Пароль студента</string>
+    <string name="github_message">Открыть проект на github</string>
+
+    <!-- Для экрана авторизации -->
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="login">Войти</string>
+    <string name="register">Регистрация</string>
+
+    <!-- Для экрана регистрации -->
+    <string name="profile_image">Фото профиля</string>
+    <string name="email">Адрес электронной почты</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+
+    <!-- Для BottomNavigationView -->
+    <string name="action_person">Профиль</string>
+    <string name="action_mail_outline">Сообщения</string>
+    <string name="action_settings">Настройки</string>
+
+    <!-- Для TopNavigationView -->
+    <string name="all_users">Все пользователи</string>
+    <string name="yours_chats">Ваши чаты</string>
+
+    <!-- Для фрагмента профиля -->
+    <string name="profile_title">Профиль</string>
+    <string name="friends">Друзья</string>
+
+    <!-- Для чата -->
+    <string name="chat_title">Профиль</string>
+    <string name="message">Сообщение</string>
+
+    <!-- Для фрагмента настроек -->
+    <string name="settings_title">Настройки</string>
+    <string name="profile_settings">Настройки профиля</string>
+    <string name="status">Статус</string>
+    <string name="notification_settings">Уведомления</string>
+    <string name="enable_notifications">Включить уведомления</string>
+    <string name="sound_notifications">Звуковые уведомления</string>
+    <string name="vibration_notifications">Вибрация</string>
+    <string name="confirm_changes">Подтвердить изменения</string>
+
+    <!-- Toast's -->
+    <string name="transition_in_progress">Выполняется переход…</string>
+    <string name="open_the_chat">Открываем чат…</string>
+    <string name="unknown_error">Неизвестная ошибка</string>
+    <string name="student_authorization">Студент авторизовался!</string>
+    <string name="photo_uploaded_successfully">Фотография успешно загружена!</string>
+    <string name="failed_to_send_request">Не удалось отправить запрос!</string>
+    <string name="error_receiving_chats">Ошибка получения чатов!</string>
+    <string name="error_processing_request">Возникла ошибка при обработке запроса!</string>
+    <string name="failed_to_connect_to_server">Не удалось подключиться к серверу!</string>
+    <string name="successful_authorization">Вы успешно авторизовались!</string>
+    <string name="successful_registration">Регистрация прошла успешно!</string>
+    <string name="account_already_exists">Этот аккаунт уже существует!</string>
+    <string name="empty_fields">Поля должны быть заполнены!</string>
+    <string name="incorrect_email_or_password">Неверный email или пароль!</string>
+    <string name="incorrect_login_or_password">Неверный логин или пароль!</string>
+    <string name="mismatch_passwords">Пароли не совпадают!</string>
+    <string name="length_passwords">Длина пароля должна превышать 6 символов!</string>
+    <string name="not_filled">Поля должны быть заполнены!</string>
+    <string name="message_input_field_cannot_be_empty">Поле ввода сообщения не может быть пустым!</string>
+</resources>
