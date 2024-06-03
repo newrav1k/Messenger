@@ -11,15 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mirea.kt.ribo.messenger.ChatActivity;
 import com.mirea.kt.ribo.messenger.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,7 +32,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_person, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat, parent, false);
         return new ViewHolder(view);
     }
 
@@ -43,7 +41,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         holder.chat_name.setText(chats.get(position).getChatName());
 
         String userId;
-        if (!chats.get(position).getUserId1().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if (!chats.get(position).getUserId1().equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())) {
             userId = chats.get(position).getUserId1();
         }
         else {
@@ -52,19 +50,16 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         FirebaseDatabase.getInstance().getReference().child("Users").child(userId)
                 .child("profile_image").get()
-                .addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        try {
-                            String profile_image = task.getResult().getValue().toString();
-                            if (!profile_image.isEmpty()) {
-                                Glide.with(holder.itemView.getContext()).load(profile_image).into(holder.chat_image);
-                            } else {
-                                holder.chat_image.setImageResource(R.drawable.anime_icon);
-                            }
-                        } catch (Exception exception) {
-                            Toast.makeText(holder.itemView.getContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
+                .addOnCompleteListener(task -> {
+                    try {
+                        String profile_image = Objects.requireNonNull(task.getResult().getValue()).toString();
+                        if (!profile_image.isEmpty()) {
+                            Glide.with(holder.itemView.getContext()).load(profile_image).into(holder.chat_image);
+                        } else {
+                            holder.chat_image.setImageResource(R.drawable.anime_icon);
                         }
+                    } catch (Exception exception) {
+                        Toast.makeText(holder.itemView.getContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
                     }
                 });
 

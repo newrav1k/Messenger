@@ -33,8 +33,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messages.get(position);
 
-        holder.messageTv.setText(message.getText());
-        holder.dateTv.setText(message.getDate());
+        holder.message.setText(message.getText());
+        holder.date.setText(message.getDate());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getOwnerId().equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
+        if (messages.get(position).getOwnerId().equals(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()))) {
             return R.layout.item_own_message;
         } else {
             return R.layout.item_other_message;
@@ -52,13 +52,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
-        private final TextView messageTv;
-        private final TextView dateTv;
+        private final TextView message;
+        private final TextView date;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            messageTv = itemView.findViewById(R.id.message);
-            dateTv = itemView.findViewById(R.id.message_date);
+            message = itemView.findViewById(R.id.message);
+            date = itemView.findViewById(R.id.message_date);
         }
     }
 }

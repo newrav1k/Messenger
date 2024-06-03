@@ -31,7 +31,7 @@ import com.google.firebase.storage.UploadTask;
 import com.mirea.kt.ribo.messenger.LoginActivity;
 import com.mirea.kt.ribo.messenger.R;
 import com.mirea.kt.ribo.messenger.databinding.FragmentProfileBinding;
-import com.mirea.kt.ribo.messenger.friends.FriendsFragment;
+import com.mirea.kt.ribo.messenger.subscription.SubscriptionsFragment;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -62,7 +62,7 @@ public class ProfileFragment extends Fragment {
 
         binding.friendsButton.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new FriendsFragment()).commit();
+                    .replace(R.id.fragment_container, new SubscriptionsFragment()).commit();
         });
 
         return binding.getRoot();
@@ -134,7 +134,7 @@ public class ProfileFragment extends Fragment {
 
     private void uploadImage() {
         if (filePath != null) {
-            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
             FirebaseStorage.getInstance().getReference().child("images/" + uid)
                     .putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override

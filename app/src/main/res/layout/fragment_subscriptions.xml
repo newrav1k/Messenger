@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    tools:context=".friends.FriendsFragment">
+    tools:context=".subscription.SubscriptionsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/friends"
+        android:id="@+id/subscriptions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

@@ -59,25 +59,22 @@ public class UsersFragment extends Fragment {
 
                             users.add(new User(userId, username, profile_image));
                         }
-                        UserAdapter.onUserClickListener onUserClickListener = new UserAdapter.onUserClickListener() {
-                            @Override
-                            public void onUserClickListener(User user, int position) {
-                                if (!ChatUtil.isExistingChat(user)) {
-                                    ChatUtil.createChat(user);
-                                }
-                                Intent intent = new Intent(getContext(), ChatActivity.class);
-                                intent.putExtra("chatId", ChatUtil.getChatId(user));
-                                startActivity(new Intent(intent));
-                            }
-                        };
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             users.sort(Comparator.comparing(User::getUsername));
                         }
 
+                        UserAdapter adapter = new UserAdapter(users, (user, position) -> {
+                            if (!ChatUtil.isExistingChat(user)) {
+                                ChatUtil.createChat(user);
+                            }
+                            Intent intent = new Intent(getContext(), ChatActivity.class);
+                            intent.putExtra("chatId", ChatUtil.getChatId(user));
+                            startActivity(new Intent(intent));
+                        });
                         binding.users.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-                        binding.users.addItemDecoration(new DividerItemDecoration(getActivity().getApplicationContext(), DividerItemDecoration.VERTICAL));
-                        binding.users.setAdapter(new UserAdapter(users, onUserClickListener));
+                        binding.users.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+                        binding.users.setAdapter(adapter);
                     }
 
                     @Override

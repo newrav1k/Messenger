@@ -46,16 +46,6 @@
                 app:layout_constraintStart_toEndOf="@+id/profile_image"
                 app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
-            <ImageButton
-                android:id="@+id/add_friend_button"
-                android:layout_width="50sp"
-                android:layout_height="40sp"
-                android:background="@color/cardview_dark_background"
-                android:src="@drawable/not_added_as_a_friend"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/toolbar"
-                app:layout_constraintTop_toTopOf="parent" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

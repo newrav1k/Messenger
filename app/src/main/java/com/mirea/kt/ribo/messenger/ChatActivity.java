@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.mirea.kt.ribo.messenger.databinding.ActivityChatBinding;
 import com.mirea.kt.ribo.messenger.message.Message;
 import com.mirea.kt.ribo.messenger.message.MessageAdapter;
-import com.mirea.kt.ribo.messenger.utils.FriendUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +32,6 @@ import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
-    private String partnerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,14 +66,6 @@ public class ChatActivity extends AppCompatActivity {
 
             binding.enterMessage.setText("");
             sendMessage(chatId, message, date);
-        });
-
-        binding.addFriendButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("UseCompatLoadingForDrawables")
-            @Override
-            public void onClick(View v) {
-                FriendUtil.addToFriends(partnerId);
-            }
         });
     }
 
@@ -155,13 +144,11 @@ public class ChatActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             binding.username.setText(Objects.requireNonNull(snapshot.child("username").getValue()).toString());
                             String profile_image = Objects.requireNonNull(snapshot.child("profile_image").getValue()).toString();
-
                             if (!profile_image.isEmpty()) {
                                 Glide.with(getApplicationContext()).load(profile_image).into(binding.profileImage);
                             } else {
                                 binding.profileImage.setImageResource(R.drawable.anime_icon);
                             }
-                            partnerId = userId2;
                         }
 
                         @Override
@@ -175,13 +162,11 @@ public class ChatActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             binding.username.setText(Objects.requireNonNull(snapshot.child("username").getValue()).toString());
                             String profile_image = Objects.requireNonNull(snapshot.child("profile_image").getValue()).toString();
-
                             if (!profile_image.isEmpty()) {
                                 Glide.with(getApplicationContext()).load(profile_image).into(binding.profileImage);
                             } else {
                                 binding.profileImage.setImageResource(R.drawable.anime_icon);
                             }
-                            partnerId = userId1;
                         }
 
                         @Override
