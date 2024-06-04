@@ -30,12 +30,18 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
         void onSubscriptionClickListener(User user, int position);
     }
 
+    public interface OnSubscribeButtonClickListener {
+        void onSubscribeButtonClickListener(User user, int position);
+    }
+
     private final ArrayList<User> users;
     private final OnSubscriptionClickListener onSubscriptionClickListener;
+    private final OnSubscribeButtonClickListener onSubscribeButtonClickListener;
 
-    public SubscriptionsAdapter(ArrayList<User> users, OnSubscriptionClickListener onSubscriptionClickListener) {
+    public SubscriptionsAdapter(ArrayList<User> users, OnSubscriptionClickListener onSubscriptionClickListener, OnSubscribeButtonClickListener onSubscribeButtonClickListener) {
         this.users = users;
         this.onSubscriptionClickListener = onSubscriptionClickListener;
+        this.onSubscribeButtonClickListener = onSubscribeButtonClickListener;
     }
 
     @NonNull
@@ -87,6 +93,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                             holder.subscribeStatus.setImageResource(R.drawable.friend_delete);
                             SubscriptionUtil.subscribe(user.getUserId());
                         }
+                        onSubscribeButtonClickListener.onSubscribeButtonClickListener(user, holder.getAdapterPosition());
                     }
 
                     @Override

@@ -90,6 +90,7 @@ public class SubscriptionsFragment extends Fragment {
             Intent intent = new Intent(getContext(), ChatActivity.class);
             intent.putExtra("chatId", ChatUtil.getChatId(user));
             startActivity(new Intent(intent));
-        });
+        }, (user, position) -> getFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new SubscriptionsFragment()).commit());
     }
 }
