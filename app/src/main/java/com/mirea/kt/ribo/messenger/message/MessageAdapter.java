@@ -37,9 +37,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
         if (!message.getPhoto().isEmpty()) {
             Glide.with(holder.itemView).load(message.getPhoto()).into(holder.photo);
+        } else {
+            holder.message.setText(message.getText());
         }
-
-        holder.message.setText(message.getText());
         holder.date.setText(message.getDate());
     }
 
@@ -50,10 +50,19 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
 
     @Override
     public int getItemViewType(int position) {
-        if (messages.get(position).getOwnerId().equals(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()))) {
-            return R.layout.item_own_message;
+        Message message = messages.get(position);
+        if (message.getPhoto().isEmpty()) {
+            if (message.getOwnerId().equals(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()))) {
+                return R.layout.item_own_message;
+            } else {
+                return R.layout.item_other_message;
+            }
         } else {
-            return R.layout.item_other_message;
+            if (message.getOwnerId().equals(Objects.requireNonNull(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()))) {
+                return R.layout.item_own_photo;
+            } else {
+                return R.layout.item_other_photo;
+            }
         }
     }
 
