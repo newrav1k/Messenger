@@ -65,6 +65,7 @@ public class ChatsFragment extends Fragment {
                 } else {
                     binding.chats.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                 }
+                assert getActivity() != null;
                 binding.chats.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
             }
 

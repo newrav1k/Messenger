@@ -14,9 +14,10 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class ChatUtil {
+
     public static void createChat(User user) {
         FirebaseDatabase.getInstance().getReference()
-                .child("Chats").child(generateChatId(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUserId()))
+                .child("Chats").child(generateChatId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), user.getUserId()))
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -82,7 +83,7 @@ public class ChatUtil {
 
     public static boolean isExistingChat(User user) {
         return FirebaseDatabase.getInstance().getReference()
-                .child("Chats").child(generateChatId(FirebaseAuth.getInstance().getCurrentUser().getUid(), user.getUserId()))
+                .child("Chats").child(generateChatId(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid(), user.getUserId()))
                 .get().isSuccessful();
     }
 }

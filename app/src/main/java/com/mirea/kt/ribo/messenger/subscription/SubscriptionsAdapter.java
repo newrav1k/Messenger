@@ -60,7 +60,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String subscriptions = Objects.requireNonNull(snapshot.child(uid).child("friends").getValue()).toString();
+                                String subscriptions = Objects.requireNonNull(snapshot.child(uid).child("subscriptions").getValue()).toString();
                                 if (subscriptions.contains(user.getUserId())) {
                                     holder.subscribeStatus.setImageResource(R.drawable.friend_delete);
                                 } else {
@@ -82,7 +82,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                         });
         holder.itemView.setOnClickListener(v -> onSubscriptionClickListener.onSubscriptionClickListener(user, holder.getAdapterPosition()));
         holder.subscribeStatus.setOnClickListener(v -> FirebaseDatabase.getInstance().getReference()
-                .child("Users").child(uid).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("Users").child(uid).child("subscriptions").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String subscriptions = Objects.requireNonNull(snapshot.getValue()).toString();

@@ -9,7 +9,6 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,11 +19,9 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.UploadTask;
 import com.mirea.kt.ribo.messenger.databinding.ActivityRegisterBinding;
 
 import java.io.IOException;
@@ -66,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         HashMap<String, String> user_info = new HashMap<String, String>() {{
                                             put("chats", "");
-                                            put("friends", "");
+                                            put("subscriptions", "");
                                             put("email", email);
                                             put("username", username);
                                             put("profile_image", "");
@@ -74,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         }};
                                         FirebaseDatabase.getInstance().getReference()
                                                 .child("Users")
-                                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                                .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                                 .setValue(user_info);
                                         uploadImage();
                                         Toast.makeText(getApplicationContext(), R.string.successful_registration, Toast.LENGTH_LONG).show();
@@ -95,12 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        binding.profileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage();
-            }
-        });
+        binding.profileImage.setOnClickListener(v -> selectImage());
     }
 
     ActivityResultLauncher<Intent> activityResultLaunch = registerForActivityResult(
@@ -130,24 +122,16 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void uploadImage() {
         if (filePath != null) {
-            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
             FirebaseStorage.getInstance().getReference().child("images/" + uid)
-                    .putFile(filePath).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(getApplicationContext(), R.string.photo_uploaded_successfully, Toast.LENGTH_LONG).show();
+                    .putFile(filePath).addOnSuccessListener(taskSnapshot -> {
+                        Toast.makeText(getApplicationContext(), R.string.photo_uploaded_successfully, Toast.LENGTH_LONG).show();
 
-                            FirebaseStorage.getInstance().getReference().child("images/" + uid).getDownloadUrl()
-                                    .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            FirebaseDatabase.getInstance().getReference()
-                                                    .child("Users")
-                                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                                    .child("profile_image").setValue(uri.toString());
-                                        }
-                                    });
-                        }
+                        FirebaseStorage.getInstance().getReference().child("images/" + uid).getDownloadUrl()
+                                .addOnSuccessListener(uri -> FirebaseDatabase.getInstance().getReference()
+                                        .child("Users")
+                                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                        .child("profile_image").setValue(uri.toString()));
                     });
         }
     }

@@ -51,7 +51,7 @@ public class SubscriptionsFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String friendsStr = Objects.requireNonNull(snapshot.child("Users").child(uid).child("friends").getValue()).toString();
+                        String friendsStr = Objects.requireNonNull(snapshot.child("Users").child(uid).child("subscriptions").getValue()).toString();
                         String[] friendsIds = friendsStr.split(",");
 
                         for (String friendsId : friendsIds) {
