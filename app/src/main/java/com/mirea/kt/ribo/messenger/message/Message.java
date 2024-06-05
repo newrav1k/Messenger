@@ -5,12 +5,21 @@ public class Message {
     private String ownerId;
     private String text;
     private String date;
+    private String photo;
 
     public Message(String id, String ownerId, String text, String date) {
         this.id = id;
         this.ownerId = ownerId;
         this.text = text;
         this.date = date;
+    }
+
+    public Message(String id, String ownerId, String text, String date, String photo) {
+        this.id = id;
+        this.ownerId = ownerId;
+        this.text = text;
+        this.date = date;
+        this.photo = photo;
     }
 
     public String getId() {
@@ -28,4 +37,6 @@ public class Message {
     public String getDate() {
         return date;
     }
+
+    public String getPhoto() { return photo; }
 }

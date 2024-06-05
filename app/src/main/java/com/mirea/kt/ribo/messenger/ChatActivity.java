@@ -1,12 +1,18 @@
 package com.mirea.kt.ribo.messenger;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,6 +38,8 @@ import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
     private ActivityChatBinding binding;
+    private Uri photoPath;
+    private String chatId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         String chatId = getIntent().getStringExtra("chatId");
+        this.chatId = chatId;
 
         updateView(chatId);
 
@@ -65,24 +74,61 @@ public class ChatActivity extends AppCompatActivity {
             String date = simpleDateFormat.format(new Date());
 
             binding.enterMessage.setText("");
-            sendMessage(chatId, message, date);
+            sendMessage(chatId, message, date, null);
         });
+        binding.sendPhoto.setOnClickListener(v -> getImage());
     }
+
+    public boolean getImage() {
+        Intent intentChooser = new Intent();
+        intentChooser.setType("image/*");
+        intentChooser.setAction(Intent.ACTION_GET_CONTENT);
+        activityResultLauncher.launch(intentChooser);
+        return true;
+    }
+
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                    photoPath = result.getData().getData();
+
+                    if (photoPath == null) {
+                        Toast.makeText(getApplicationContext(), R.string.message_input_field_cannot_be_empty, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
+                    @SuppressLint("SimpleDateFormat")
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+                    String date = simpleDateFormat.format(new Date());
+
+                    binding.enterMessage.setText("");
+                    sendMessage(chatId, "", date, photoPath);
+                }
+            });
 
     private void updateView(String chatId) {
         uploadMessages(chatId);
         uploadPartnerInfo();
     }
 
-    public void sendMessage(String chatId, String message, String date) {
+    public void sendMessage(String chatId, String message, String date, Uri photo) {
         if (chatId == null) {
             return;
         }
 
         HashMap<String, String> messageInfo = new HashMap<>();
-        messageInfo.put("text", message);
-        messageInfo.put("ownerId", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
-        messageInfo.put("date", date);
+        if (photo == null) {
+            messageInfo.put("text", message);
+            messageInfo.put("ownerId", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+            messageInfo.put("date", date);
+            messageInfo.put("photo", "");
+        } else {
+            messageInfo.put("text", message);
+            messageInfo.put("ownerId", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+            messageInfo.put("date", date);
+            messageInfo.put("photo", photo.toString());
+        }
 
         FirebaseDatabase.getInstance().getReference().child("Chats")
                 .child(chatId)
@@ -108,8 +154,9 @@ public class ChatActivity extends AppCompatActivity {
                             String ownerId = Objects.requireNonNull(messageSnapshot.child("ownerId").getValue()).toString();
                             String text = Objects.requireNonNull(messageSnapshot.child("text").getValue()).toString();
                             String date = Objects.requireNonNull(messageSnapshot.child("date").getValue()).toString();
+                            String photo = Objects.requireNonNull(messageSnapshot.child("photo").getValue()).toString();
 
-                            messages.add(new Message(messageId, ownerId, text, date));
+                            messages.add(new Message(messageId, ownerId, text, date, photo));
                         }
 
                         binding.messages.setLayoutManager(new LinearLayoutManager(getApplicationContext(),

@@ -3,11 +3,13 @@ package com.mirea.kt.ribo.messenger.message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.mirea.kt.ribo.messenger.R;
 
@@ -33,6 +35,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messages.get(position);
 
+        if (!message.getPhoto().isEmpty()) {
+            Glide.with(holder.itemView).load(message.getPhoto()).into(holder.photo);
+        }
+
         holder.message.setText(message.getText());
         holder.date.setText(message.getDate());
     }
@@ -54,11 +60,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public static class MessageViewHolder extends RecyclerView.ViewHolder {
         private final TextView message;
         private final TextView date;
+        private final ImageView photo;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.message);
             date = itemView.findViewById(R.id.message_date);
+            photo = itemView.findViewById(R.id.photo);
         }
     }
 }

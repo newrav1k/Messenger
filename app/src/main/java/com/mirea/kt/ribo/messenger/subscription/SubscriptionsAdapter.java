@@ -117,7 +117,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
             super(itemView);
             profile_image = itemView.findViewById(R.id.user_image);
             username = itemView.findViewById(R.id.username);
-            subscribeStatus = itemView.findViewById(R.id.change_subscribe_status);
+            subscribeStatus = itemView.findViewById(R.id.subscribe_status);
         }
     }
 }

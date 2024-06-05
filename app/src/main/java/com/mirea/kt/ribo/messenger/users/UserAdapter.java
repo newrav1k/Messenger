@@ -78,14 +78,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     }
                 });
 
-        /*if (!user.getProfileImage().isEmpty()) {
-            Glide.with(holder.itemView.getContext())
-                    .load(user.getProfileImage())
-                    .into(holder.profile_image);
-        } else {
-            holder.profile_image.setImageResource(R.drawable.anime_icon);
-        }*/
-
         holder.itemView.setOnClickListener(v -> onUserClickListener.onUserClickListener(user, holder.getAdapterPosition()));
         holder.subscribeStatus.setOnClickListener(v -> {
             FirebaseDatabase.getInstance().getReference()
@@ -124,7 +116,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             super(itemView);
             profile_image = itemView.findViewById(R.id.user_image);
             username = itemView.findViewById(R.id.username);
-            subscribeStatus = itemView.findViewById(R.id.change_subscribe_status);
+            subscribeStatus = itemView.findViewById(R.id.subscribe_status);
         }
     }
 }

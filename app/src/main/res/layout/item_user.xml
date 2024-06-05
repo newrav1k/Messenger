@@ -33,7 +33,7 @@
                     android:gravity="start|center_vertical"/>
 
                 <ImageButton
-                    android:id="@+id/change_subscribe_status"
+                    android:id="@+id/subscribe_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="16dp"

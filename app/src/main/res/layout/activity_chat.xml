@@ -46,6 +46,16 @@
                 app:layout_constraintStart_toEndOf="@+id/profile_image"
                 app:layout_constraintTop_toTopOf="@+id/toolbar" />
 
+            <ImageButton
+                android:id="@+id/add_friend_button"
+                android:layout_width="50sp"
+                android:layout_height="40sp"
+                android:background="@color/cardview_dark_background"
+                android:src="@drawable/unsubscribe_white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/toolbar"
+                app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -54,8 +64,8 @@
         android:id="@+id/messages"
         android:layout_width="match_parent"
         android:layout_height="0sp"
-        android:padding="5sp"
-        android:layout_weight="10"/>
+        android:layout_weight="10"
+        android:padding="5sp" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -69,6 +79,7 @@
             android:gravity="center_vertical">
 
             <ImageButton
+                android:id="@+id/send_photo"
                 android:layout_width="50sp"
                 android:layout_height="match_parent"
                 android:src="@drawable/insert_photo"

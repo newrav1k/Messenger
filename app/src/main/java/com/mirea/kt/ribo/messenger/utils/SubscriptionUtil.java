@@ -1,5 +1,7 @@
 package com.mirea.kt.ribo.messenger.utils;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -10,6 +12,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.mirea.kt.ribo.messenger.users.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 public class SubscriptionUtil {
@@ -73,17 +78,11 @@ public class SubscriptionUtil {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String friends = Objects.requireNonNull(snapshot.getValue()).toString();
-                        String[] arr = friends.split(",");
-                        for (int i = 0; i < arr.length; i++) {
-                            if (arr[i].equals(userId)) {
-                                arr[i] = "";
-                            }
-                        }
-                        String new_friends = String.join(",", arr);
+                        String subscriptions = Objects.requireNonNull(snapshot.getValue()).toString();
+                        String new_subscriptions = subscriptions.replace(userId, "");
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Users").child(uid).child("friends")
-                                .setValue(new_friends);
+                                .setValue(new_subscriptions);
                     }
 
                     @Override
