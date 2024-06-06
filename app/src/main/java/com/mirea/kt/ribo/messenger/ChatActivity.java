@@ -157,10 +157,11 @@ public class ChatActivity extends AppCompatActivity {
 
                             messages.add(new Message(messageId, ownerId, text, date, photo));
                         }
-
+                        MessageAdapter adapter = new MessageAdapter(messages);
                         binding.messages.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
                                 LinearLayoutManager.VERTICAL, false));
-                        binding.messages.setAdapter(new MessageAdapter(messages));
+                        binding.messages.setAdapter(adapter);
+                        binding.messages.scrollToPosition(adapter.getItemCount() - 1);
                     }
 
                     @Override
