@@ -8,6 +8,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
 
 public class SubscriptionUtil {
@@ -44,7 +48,16 @@ public class SubscriptionUtil {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String subscriptions = Objects.requireNonNull(snapshot.getValue()).toString();
-                        String new_subscriptions = subscriptions.replace(userId, "");
+                        String new_subscriptions;
+                        String[] stringBuffer = subscriptions.split(",");
+                        ArrayList<String> buffer = new ArrayList<>();
+                        Collections.addAll(buffer, stringBuffer);
+                        if (buffer.indexOf(userId) == 0) {
+                            new_subscriptions = subscriptions.replace(userId, "");
+                        } else {
+                            new_subscriptions = subscriptions.replace("," + userId, "");
+                        }
+//                        String new_subscriptions = subscriptions.replace(userId, "");
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Users").child(uid).child("subscriptions")
                                 .setValue(new_subscriptions);
