@@ -1,10 +1,10 @@
 package com.mirea.kt.ribo.messenger.bottom_navigation.settings;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,35 +16,44 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.mirea.kt.ribo.messenger.R;
 import com.mirea.kt.ribo.messenger.databinding.FragmentSettingsBinding;
 
-public class SettingsFragment extends Fragment {
+import java.util.Objects;
 
+public class SettingsFragment extends Fragment {
+    private final String TAG = "SettingsFragment";
     private FragmentSettingsBinding binding;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
+        Log.i(TAG, "onCreateView: initialization binding");
 
         updateView();
+        Log.i(TAG, "onCreateView: call .updateView()");
 
-        binding.confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = binding.username.getText().toString().trim();
-                String status = binding.status.getText().toString().trim();
+        binding.confirmButton.setOnClickListener(v -> {
+            Log.i(TAG, "onCreateView: ");
+            String username = binding.username.getText().toString().trim();
+            Log.i(TAG, "onCreateView: get username");
+            String status = binding.status.getText().toString().trim();
+            Log.i(TAG, "onCreateView: get status");
 
-                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+            Log.i(TAG, "onCreateView: FirebaseAuth get user id");
 
-                if (!username.isEmpty()) {
-                    FirebaseDatabase.getInstance().getReference().child("Users").child(uid)
-                            .child("username").setValue(username);
-                    binding.username.setText("");
-                }
-                if (!status.isEmpty()) {
-                    FirebaseDatabase.getInstance().getReference().child("Users").child(uid)
-                            .child("status").setValue(status);
-                    binding.status.setText("");
-                }
+            if (!username.isEmpty()) {
+                FirebaseDatabase.getInstance().getReference().child("Users").child(uid)
+                        .child("username").setValue(username);
+                Log.i(TAG, "onCreateView: FirebaseDatabase set username");
+                binding.username.setText("");
+                Log.i(TAG, "onCreateView: binding.username set empty text");
+            }
+            if (!status.isEmpty()) {
+                FirebaseDatabase.getInstance().getReference().child("Users").child(uid)
+                        .child("status").setValue(status);
+                Log.i(TAG, "onCreateView: FirebaseDatabase set status");
+                binding.status.setText("");
+                Log.i(TAG, "onCreateView: binding.status set empty text");
             }
         });
 
@@ -52,7 +61,9 @@ public class SettingsFragment extends Fragment {
     }
 
     private void updateView() {
+        assert getActivity() != null;
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.settings_title);
+        Log.i(TAG, "updateView: toolbar change title");
     }
 }

@@ -1,5 +1,6 @@
 package com.mirea.kt.ribo.messenger.message;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
+    private static final String TAG = "MessageAdapter";
 
     private final ArrayList<Message> messages;
 
@@ -34,13 +36,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messages.get(position);
-
+        Log.i(TAG, "onBindViewHolder: get message");
         if (!message.getPhoto().isEmpty()) {
             Glide.with(holder.itemView).load(message.getPhoto()).into(holder.photo);
+            Log.i(TAG, "onBindViewHolder: load holder.photo to message.getPhoto()");
         } else {
             holder.message.setText(message.getText());
+            Log.i(TAG, "onBindViewHolder: holder.message set text message.getText()");
         }
         holder.date.setText(message.getDate());
+        Log.i(TAG, "onBindViewHolder: holder.date set text message.getDate()");
     }
 
     @Override
@@ -74,8 +79,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             message = itemView.findViewById(R.id.message);
+            Log.i(TAG, "ViewHolder: create message");
             date = itemView.findViewById(R.id.message_date);
+            Log.i(TAG, "ViewHolder: create message_date");
             photo = itemView.findViewById(R.id.photo);
+            Log.i(TAG, "ViewHolder: create photo");
         }
     }
 }

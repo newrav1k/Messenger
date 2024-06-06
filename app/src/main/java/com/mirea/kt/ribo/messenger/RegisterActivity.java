@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.mirea.kt.ribo.messenger.databinding.ActivityMessengerBinding;
 import com.mirea.kt.ribo.messenger.databinding.ActivityRegisterBinding;
 
 import java.io.IOException;
@@ -29,16 +31,17 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
-
+    private final String TAG = "RegisterActivity";
     private ActivityRegisterBinding binding;
-
     private Uri filePath;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
+        Log.i(TAG, "onCreateView: initialization binding");
         setContentView(binding.getRoot());
+        Log.i(TAG, "onCreate: .setContentView(binding.getRoot())");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -46,15 +49,22 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (actionBar != null) {
             actionBar.setTitle("");
+            Log.i(TAG, "onCreate: toolbar set title");
             actionBar.setHomeButtonEnabled(true);
+            Log.i(TAG, "onCreate: toolbar setHomeButtonEnabled true");
             actionBar.setDisplayHomeAsUpEnabled(true);
+            Log.i(TAG, "onCreate: toolbar setDisplayHomeAsUpEnabled true");
         }
 
         binding.registerButton.setOnClickListener(v -> {
             String username = Objects.requireNonNull(binding.usernameEdittext.getText()).toString();
+            Log.i(TAG, "onCreate: get username");
             String email = Objects.requireNonNull(binding.emailEdittext.getText()).toString();
+            Log.i(TAG, "onCreate: get email");
             String password = Objects.requireNonNull(binding.passwordEdittext.getText()).toString();
+            Log.i(TAG, "onCreate: get password");
             String confirm_password = Objects.requireNonNull(binding.confirmPasswordEdittext.getText()).toString();
+            Log.i(TAG, "onCreate: get confirm_password");
             if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirm_password.isEmpty()) {
                 if (password.length() >= 6) {
                     if (password.equals(confirm_password)) {
@@ -69,11 +79,14 @@ public class RegisterActivity extends AppCompatActivity {
                                             put("profile_image", "");
                                             put("status", "Привет! Я есть Грут!");
                                         }};
+                                        Log.i(TAG, "onCreate: create user_info");
                                         FirebaseDatabase.getInstance().getReference()
                                                 .child("Users")
                                                 .child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())
                                                 .setValue(user_info);
+                                        Log.i(TAG, "onCreate: FirebaseDatabase set value user_info");
                                         uploadImage();
+                                        Log.i(TAG, "onCreate: call .uploadImage()");
                                         Toast.makeText(getApplicationContext(), R.string.successful_registration, Toast.LENGTH_LONG).show();
                                         startActivity(new Intent(getApplicationContext(), MessengerActivity.class));
                                         finish();

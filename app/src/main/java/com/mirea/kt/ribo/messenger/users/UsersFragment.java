@@ -2,6 +2,7 @@ package com.mirea.kt.ribo.messenger.users;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 public class UsersFragment extends Fragment {
+    private final String TAG = "UsersFragment";
 
     private FragmentUsersBinding binding;
 
@@ -35,8 +37,10 @@ public class UsersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentUsersBinding.inflate(inflater, container, false);
+        Log.i(TAG, "onCreateView: initialization binding");
 
         loadUsers();
+        Log.i(TAG, "onCreateView: call .loadUsers()");
 
         return binding.getRoot();
     }
@@ -54,25 +58,34 @@ public class UsersFragment extends Fragment {
                             }
 
                             String userId = userSnapshot.getKey();
+                            Log.i(TAG, "onDataChange: get userId");
                             String username = Objects.requireNonNull(userSnapshot.child("username").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get username");
                             String profile_image = Objects.requireNonNull(userSnapshot.child("profile_image").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get profile_image");
 
                             users.add(new User(userId, username, profile_image));
+                            Log.i(TAG, "onDataChange: users add new user");
                         }
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             users.sort(Comparator.comparing(User::getUsername));
+                            Log.i(TAG, "onDataChange: users sorted");
                         }
 
                         UserAdapter adapter = new UserAdapter(users, (user, position) -> {
                             if (!ChatUtil.isExistingChat(user)) {
                                 ChatUtil.createChat(user);
+                                Log.i(TAG, "onDataChange: ChatUtil call .createChat(user)");
                                 Toast.makeText(getContext(), R.string.chat_has_been_created, Toast.LENGTH_SHORT).show();
                             }
                         });
                         binding.users.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+                        Log.i(TAG, "onDataChange: binding.users set layout manager");
                         binding.users.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+                        Log.i(TAG, "onDataChange: binding.users add item decoration");
                         binding.users.setAdapter(adapter);
+                        Log.i(TAG, "onDataChange: binding.users set adapter");
                     }
 
                     @Override

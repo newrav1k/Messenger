@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class MainActivity extends AppCompatActivity {
+    private final String TAG = "MainActivity";
     private static final String ADDRESS = "https://android-for-students.ru/coursework/login.php";
     private static final String GROUP = "RIBO-04-22";
 
@@ -55,22 +57,28 @@ public class MainActivity extends AppCompatActivity {
                             .add("pwd", pwd)
                             .add("g", GROUP)
                             .build();
+                    Log.i(TAG, "onCreate: create requestBody");
                     Request request = new Request.Builder()
                             .url(ADDRESS)
                             .post(requestBody)
                             .build();
+                    Log.i(TAG, "onCreate: create request");
                     Executor executor = Executors.newSingleThreadExecutor();
                     executor.execute(() -> {
                         try {
+                            Log.i(TAG, "onCreate: sending a request");
                             Response response = client.newCall(request).execute();
+                            Log.i(TAG, "onCreate: get response");
                             if (response.isSuccessful()) {
                                 ResponseBody body = response.body();
                                 assert body != null;
                                 try {
                                     JSONObject jsonObject = new JSONObject(body.string());
+                                    Log.i(TAG, "onCreate: get jsonObject");
                                     if (jsonObject.getInt("result_code") == 1) {
                                         displayToast(R.string.student_authorization);
                                         startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                                        Log.i(TAG, "onCreate: start LoginActivity");
                                     }
                                     else {
                                         displayToast(R.string.incorrect_login_or_password);
@@ -82,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                                 displayToast(R.string.failed_to_connect_to_server);
                             }
                             response.close();
+                            Log.i(TAG, "onCreate: response call .close()");
                         } catch (IOException exception) {
                             displayToast(R.string.failed_to_send_request);
                         }
@@ -98,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
             Uri uri = Uri.parse("https://github.com/newrav1k/Messenger");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
+            Log.i(TAG, "onCreate: following a link");
         });
     }
 

@@ -1,6 +1,7 @@
 package com.mirea.kt.ribo.messenger;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,17 +16,21 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class MessengerActivity extends AppCompatActivity {
-
+    private final String TAG = "MessengerActivity";
     private ActivityMessengerBinding binding;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMessengerBinding.inflate(getLayoutInflater());
+        Log.i(TAG, "onCreateView: initialization binding");
         setContentView(binding.getRoot());
+        Log.i(TAG, "onCreate: .setContentView(binding.getRoot())");
 
         getSupportFragmentManager().beginTransaction().replace(binding.fragmentContainer.getId(), new MessengerFragment()).commit();
+        Log.i(TAG, "onCreate: binding.fragmentContainer replace to MessengerFragment()");
         binding.bottomNavigation.setSelectedItemId(R.id.action_mail_outline);
+        Log.i(TAG, "onCreate: binding.bottomNavigation set selected item action_mail_outline");
 
         HashMap<Integer, Fragment> fragments = new HashMap<Integer, Fragment>() {{
             put(R.id.action_person, new ProfileFragment());
@@ -36,6 +41,7 @@ public class MessengerActivity extends AppCompatActivity {
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
             Fragment fragment = fragments.get(item.getItemId());
             getSupportFragmentManager().beginTransaction().replace(binding.fragmentContainer.getId(), Objects.requireNonNull(fragment)).commit();
+            Log.i(TAG, "onCreate: binding.fragmentContainer replace to fragment");
             return true;
         });
     }

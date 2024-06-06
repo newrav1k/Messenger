@@ -1,6 +1,7 @@
 package com.mirea.kt.ribo.messenger.chats;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
+    private static final String TAG = "ChatAdapter";
 
     private final ArrayList<Chat> chats;
 
@@ -39,6 +41,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.chat_name.setText(chats.get(position).getChatName());
+        Log.i(TAG, "onBindViewHolder: holder.chat_name set text to chats.get(position).getChatName()");
 
         String userId;
         if (!chats.get(position).getUserId1().equals(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid())) {
@@ -53,10 +56,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 .addOnCompleteListener(task -> {
                     try {
                         String profile_image = Objects.requireNonNull(task.getResult().getValue()).toString();
+                        Log.i(TAG, "onBindViewHolder: get profile_image");
                         if (!profile_image.isEmpty()) {
                             Glide.with(holder.itemView.getContext()).load(profile_image).into(holder.chat_image);
+                            Log.i(TAG, "onBindViewHolder: load profile_image to holder.chat_image");
                         } else {
                             holder.chat_image.setImageResource(R.drawable.anime_icon);
+                            Log.i(TAG, "onBindViewHolder: holder.chat_image set anime_icon");
                         }
                     } catch (Exception exception) {
                         Toast.makeText(holder.itemView.getContext(), R.string.unknown_error, Toast.LENGTH_LONG).show();
@@ -67,6 +73,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             Intent intent = new Intent(holder.itemView.getContext(), ChatActivity.class);
             intent.putExtra("chatId", chats.get(position).getChatId());
             holder.itemView.getContext().startActivity(intent);
+            Log.i(TAG, "onBindViewHolder: start ChatActivity");
         });
     }
 
@@ -82,7 +89,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             chat_image = itemView.findViewById(R.id.user_image);
+            Log.i(TAG, "ViewHolder: create user_image");
             chat_name = itemView.findViewById(R.id.username);
+            Log.i(TAG, "ViewHolder: create username");
         }
     }
 }

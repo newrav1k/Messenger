@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class ChatActivity extends AppCompatActivity {
+    private final String TAG = "ChatActivity";
     private ActivityChatBinding binding;
     private Uri photoPath;
     private String chatId;
@@ -44,7 +46,9 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityChatBinding.inflate(getLayoutInflater());
+        Log.i(TAG, "onCreateView: initialization binding");
         setContentView(binding.getRoot());
+        Log.i(TAG, "onCreate: .setContentView(binding.getRoot())");
 
         Toolbar toolbar = binding.toolbar;
         setSupportActionBar(toolbar);
@@ -52,17 +56,24 @@ public class ChatActivity extends AppCompatActivity {
 
         if (actionBar != null) {
             actionBar.setTitle("");
+            Log.i(TAG, "onCreate: toolbar set title");
             actionBar.setHomeButtonEnabled(true);
+            Log.i(TAG, "onCreate: toolbar setHomeButtonEnabled true");
             actionBar.setDisplayHomeAsUpEnabled(true);
+            Log.i(TAG, "onCreate: toolbar setDisplayHomeAsUpEnabled true");
         }
 
         String chatId = getIntent().getStringExtra("chatId");
+        Log.i(TAG, "onCreate: get chatId");
         this.chatId = chatId;
 
         updateView(chatId);
+        Log.i(TAG, "onCreate: call .update(chatId)");
 
         binding.sendMessage.setOnClickListener(v -> {
+            Log.i(TAG, "onCreate: pressing binding.sendMessage");
             String message = binding.enterMessage.getText().toString().trim();
+            Log.i(TAG, "onCreate: get message");
             if (message.isEmpty()) {
                 Toast.makeText(getApplicationContext(), R.string.message_input_field_cannot_be_empty, Toast.LENGTH_LONG).show();
                 return;
@@ -73,9 +84,14 @@ public class ChatActivity extends AppCompatActivity {
             String date = simpleDateFormat.format(new Date());
 
             binding.enterMessage.setText("");
+            Log.i(TAG, "onCreate: binding.enterMessage set text");
             sendMessage(chatId, message, date, null);
+            Log.i(TAG, "onCreate: call .sendMessage(chatId, message, date, null)");
         });
-        binding.sendPhoto.setOnClickListener(v -> getImage());
+        binding.sendPhoto.setOnClickListener(v -> {
+            Log.i(TAG, "onCreate: pressing binding.sendPhoto");
+            getImage();
+        });
     }
 
     public boolean getImage() {
@@ -83,6 +99,7 @@ public class ChatActivity extends AppCompatActivity {
         intentChooser.setType("image/*");
         intentChooser.setAction(Intent.ACTION_GET_CONTENT);
         activityResultLauncher.launch(intentChooser);
+        Log.i(TAG, "selectImage: start choose image intent");
         return true;
     }
 
@@ -91,6 +108,7 @@ public class ChatActivity extends AppCompatActivity {
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null && result.getData().getData() != null) {
                     photoPath = result.getData().getData();
+                    Log.i(TAG, "ActivityResultLauncher: get result");
 
                     if (photoPath == null) {
                         Toast.makeText(getApplicationContext(), R.string.message_input_field_cannot_be_empty, Toast.LENGTH_LONG).show();
@@ -102,13 +120,17 @@ public class ChatActivity extends AppCompatActivity {
                     String date = simpleDateFormat.format(new Date());
 
                     binding.enterMessage.setText("");
+                    Log.i(TAG, "ActivityResultLauncher: binding.enterMessage set text");
                     sendMessage(chatId, "", date, photoPath);
+                    Log.i(TAG, "ActivityResultLauncher: call .sendMessage(chatId, \"\", date, photoPath)");
                 }
             });
 
     private void updateView(String chatId) {
         uploadMessages(chatId);
+        Log.i(TAG, "updateView: call .uploadMessages(chatId)");
         uploadPartnerInfo();
+        Log.i(TAG, "updateView: call .uploadPartnerInfo()");
     }
 
     public void sendMessage(String chatId, String message, String date, Uri photo) {
@@ -132,6 +154,7 @@ public class ChatActivity extends AppCompatActivity {
         FirebaseDatabase.getInstance().getReference().child("Chats")
                 .child(chatId)
                 .child("messages").push().setValue(messageInfo);
+        Log.i(TAG, "sendMessage: FirebaseDatabase set value messageInfo");
     }
 
     private void uploadMessages(String chatId) {
@@ -150,18 +173,27 @@ public class ChatActivity extends AppCompatActivity {
                         ArrayList<Message> messages = new ArrayList<>();
                         for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                             String messageId = messageSnapshot.getKey();
+                            Log.i(TAG, "onDataChange: get messageId");
                             String ownerId = Objects.requireNonNull(messageSnapshot.child("ownerId").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get ownerId");
                             String text = Objects.requireNonNull(messageSnapshot.child("text").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get text");
                             String date = Objects.requireNonNull(messageSnapshot.child("date").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get date");
                             String photo = Objects.requireNonNull(messageSnapshot.child("photo").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get photo");
 
                             messages.add(new Message(messageId, ownerId, text, date, photo));
+                            Log.i(TAG, "onDataChange: messages add new message");
                         }
                         MessageAdapter adapter = new MessageAdapter(messages);
                         binding.messages.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
                                 LinearLayoutManager.VERTICAL, false));
+                        Log.i(TAG, "onDataChange: binding.messages set layout manager");
                         binding.messages.setAdapter(adapter);
+                        Log.i(TAG, "onDataChange: binding.messages set adapter");
                         binding.messages.scrollToPosition(adapter.getItemCount() - 1);
+                        Log.i(TAG, "onDataChange: binding.messages scrollToPosition");
                     }
 
                     @Override
@@ -181,20 +213,27 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String userId1 = Objects.requireNonNull(snapshot.child("user1").getValue()).toString();
+                Log.i(TAG, "onDataChange: get userId1");
                 String userId2 = Objects.requireNonNull(snapshot.child("user2").getValue()).toString();
+                Log.i(TAG, "onDataChange: get userId2");
 
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+                Log.i(TAG, "onDataChange: get databaseReference");
 
                 if (Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid().equals(userId1)) {
                     databaseReference.child(userId2).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             binding.username.setText(Objects.requireNonNull(snapshot.child("username").getValue()).toString());
+                            Log.i(TAG, "onDataChange: binding.username set text username");
                             String profile_image = Objects.requireNonNull(snapshot.child("profile_image").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get profile_image");
                             if (!profile_image.isEmpty()) {
                                 Glide.with(getApplicationContext()).load(profile_image).into(binding.profileImage);
+                                Log.i(TAG, "onDataChange: load profile_image to binding.profileImage");
                             } else {
                                 binding.profileImage.setImageResource(R.drawable.anime_icon);
+                                Log.i(TAG, "onDataChange: binding.profileImage set image anime_icon");
                             }
                         }
 
@@ -208,11 +247,15 @@ public class ChatActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             binding.username.setText(Objects.requireNonNull(snapshot.child("username").getValue()).toString());
+                            Log.i(TAG, "onDataChange: binding.username set text username");
                             String profile_image = Objects.requireNonNull(snapshot.child("profile_image").getValue()).toString();
+                            Log.i(TAG, "onDataChange: get profile_image");
                             if (!profile_image.isEmpty()) {
                                 Glide.with(getApplicationContext()).load(profile_image).into(binding.profileImage);
+                                Log.i(TAG, "onDataChange: load profile_image to binding.profileImage");
                             } else {
                                 binding.profileImage.setImageResource(R.drawable.anime_icon);
+                                Log.i(TAG, "onDataChange: binding.profileImage set image anime_icon");
                             }
                         }
 
@@ -235,6 +278,7 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.simple_menu, menu);
+        Log.i(TAG, "onCreateOptionsMenu: inflate R.menu.simple_menu");
         return true;
     }
 
@@ -242,6 +286,7 @@ public class ChatActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             finish();
+            Log.i(TAG, "onOptionsItemSelected: call .finish()");
             return true;
         } else {
             return super.onOptionsItemSelected(item);
