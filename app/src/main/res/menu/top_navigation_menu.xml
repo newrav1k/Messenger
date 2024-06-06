@@ -7,5 +7,5 @@
     <item
         android:id="@+id/users"
         android:title="@string/all_users"
-        android:icon="@drawable/friends_top_navigation"/>
+        android:icon="@drawable/users_top_navigation"/>
 </menu>

@@ -29,7 +29,7 @@
 
     <!-- Для фрагмента профиля -->
     <string name="profile_title">Профиль</string>
-    <string name="friends">Друзья</string>
+    <string name="subscriptions">Подписки</string>
 
     <!-- Для чата -->
     <string name="chat_title">Профиль</string>
@@ -39,10 +39,6 @@
     <string name="settings_title">Настройки</string>
     <string name="profile_settings">Настройки профиля</string>
     <string name="status">Статус</string>
-    <string name="notification_settings">Уведомления</string>
-    <string name="enable_notifications">Включить уведомления</string>
-    <string name="sound_notifications">Звуковые уведомления</string>
-    <string name="vibration_notifications">Вибрация</string>
     <string name="confirm_changes">Подтвердить изменения</string>
 
     <!-- Toast's -->
@@ -53,6 +49,8 @@
     <string name="photo_uploaded_successfully">Фотография успешно загружена!</string>
     <string name="failed_to_send_request">Не удалось отправить запрос!</string>
     <string name="error_receiving_chats">Ошибка получения чатов!</string>
+    <string name="chat_has_been_created">Чат был создан!</string>
+    <string name="chat_is_existing">Чат уже существует!</string>
     <string name="error_processing_request">Возникла ошибка при обработке запроса!</string>
     <string name="failed_to_connect_to_server">Не удалось подключиться к серверу!</string>
     <string name="successful_authorization">Вы успешно авторизовались!</string>

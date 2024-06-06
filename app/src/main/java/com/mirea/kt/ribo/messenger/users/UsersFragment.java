@@ -1,11 +1,11 @@
 package com.mirea.kt.ribo.messenger.users;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +19,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.mirea.kt.ribo.messenger.ChatActivity;
+import com.mirea.kt.ribo.messenger.R;
 import com.mirea.kt.ribo.messenger.databinding.FragmentUsersBinding;
 import com.mirea.kt.ribo.messenger.utils.ChatUtil;
 
@@ -67,10 +67,8 @@ public class UsersFragment extends Fragment {
                         UserAdapter adapter = new UserAdapter(users, (user, position) -> {
                             if (!ChatUtil.isExistingChat(user)) {
                                 ChatUtil.createChat(user);
+                                Toast.makeText(getContext(), R.string.chat_has_been_created, Toast.LENGTH_SHORT).show();
                             }
-                            Intent intent = new Intent(getContext(), ChatActivity.class);
-                            intent.putExtra("chatId", ChatUtil.getChatId(user));
-                            startActivity(new Intent(intent));
                         });
                         binding.users.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
                         binding.users.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));

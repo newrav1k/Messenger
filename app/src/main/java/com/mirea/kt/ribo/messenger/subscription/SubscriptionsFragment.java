@@ -37,7 +37,7 @@ public class SubscriptionsFragment extends Fragment {
         binding = FragmentSubscriptionsBinding.inflate(inflater, container, false);
 
         Toolbar toolbar = getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.friends);
+        toolbar.setTitle(R.string.subscriptions);
 
         updateView();
 
@@ -51,6 +51,9 @@ public class SubscriptionsFragment extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.child("Users").child(uid).child("subscriptions").getValue().toString().isEmpty()) {
+                            return;
+                        }
                         String friendsStr = Objects.requireNonNull(snapshot.child("Users").child(uid).child("subscriptions").getValue()).toString();
                         String[] friendsIds = friendsStr.split(",");
 

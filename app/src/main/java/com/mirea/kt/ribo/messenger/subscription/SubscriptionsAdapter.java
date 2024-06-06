@@ -62,7 +62,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 String subscriptions = Objects.requireNonNull(snapshot.child(uid).child("subscriptions").getValue()).toString();
                                 if (subscriptions.contains(user.getUserId())) {
-                                    holder.subscribeStatus.setImageResource(R.drawable.friend_delete);
+                                    holder.subscribeStatus.setImageResource(R.drawable.subscriptions_delete);
                                 } else {
                                     holder.subscribeStatus.setImageResource(R.drawable.subscribe_black);
                                 }
@@ -90,7 +90,7 @@ public class SubscriptionsAdapter extends RecyclerView.Adapter<SubscriptionsAdap
                             holder.subscribeStatus.setImageResource(R.drawable.subscribe_black);
                             SubscriptionUtil.unsubscribe(user.getUserId());
                         } else {
-                            holder.subscribeStatus.setImageResource(R.drawable.friend_delete);
+                            holder.subscribeStatus.setImageResource(R.drawable.subscriptions_delete);
                             SubscriptionUtil.subscribe(user.getUserId());
                         }
                         onSubscribeButtonClickListener.onSubscribeButtonClickListener(user, holder.getAdapterPosition());

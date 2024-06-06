@@ -42,6 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="text" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -62,40 +63,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="text" />
+
             </LinearLayout>
-
-            <!-- Уведомления -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/notification_settings"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <!-- Включить уведомления -->
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/notification_switch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/enable_notifications"/>
-
-            <!-- Звук -->
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/sound_switch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/sound_notifications" />
-
-            <!-- Вибрация -->
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/vibration_switch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/vibration_notifications" />
 
             <Button
                 android:id="@+id/confirm_button"

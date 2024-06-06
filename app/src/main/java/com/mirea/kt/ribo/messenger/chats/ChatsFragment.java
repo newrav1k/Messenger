@@ -44,6 +44,9 @@ public class ChatsFragment extends Fragment {
         FirebaseDatabase.getInstance().getReference().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.child("Users").child(uid).child("chats").getValue().toString().isEmpty()) {
+                    return;
+                }
                 String chatsStr = Objects.requireNonNull(snapshot.child("Users").child(uid).child("chats").getValue()).toString();
                 String[] chatsIds = chatsStr.split(",");
 
