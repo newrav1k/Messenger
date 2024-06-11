@@ -1,5 +1,7 @@
 package com.mirea.kt.ribo.messenger;
 
+import static java.security.AccessController.getContext;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -26,6 +28,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.mirea.kt.ribo.messenger.databinding.ActivityChatBinding;
 import com.mirea.kt.ribo.messenger.message.Message;
 import com.mirea.kt.ribo.messenger.message.MessageAdapter;
@@ -115,13 +119,15 @@ public class ChatActivity extends AppCompatActivity {
                         return;
                     }
 
-                    @SuppressLint("SimpleDateFormat")
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
-                    String date = simpleDateFormat.format(new Date());
+//                    @SuppressLint("SimpleDateFormat")
+//                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+//                    String date = simpleDateFormat.format(new Date());
 
                     binding.enterMessage.setText("");
                     Log.i(TAG, "ActivityResultLauncher: binding.enterMessage set text");
-                    sendMessage(chatId, "", date, photoPath);
+//                    sendMessage(chatId, "", date, photoPath);
+                    uploadImage();
+                    photoPath = null;
                     Log.i(TAG, "ActivityResultLauncher: call .sendMessage(chatId, \"\", date, photoPath)");
                 }
             });
@@ -131,6 +137,31 @@ public class ChatActivity extends AppCompatActivity {
         Log.i(TAG, "updateView: call .uploadMessages(chatId)");
         uploadPartnerInfo();
         Log.i(TAG, "updateView: call .uploadPartnerInfo()");
+    }
+
+    private void uploadImage() {
+        if (photoPath != null) {
+            FirebaseStorage.getInstance().getReference().child("images/").child("Chats").child(chatId)
+                    .putFile(photoPath).addOnSuccessListener(taskSnapshot -> {
+                        Toast.makeText(getApplicationContext(), R.string.photo_uploaded_successfully, Toast.LENGTH_LONG).show();
+
+                        FirebaseStorage.getInstance().getReference().child("images/").child("Chats").child(chatId).getDownloadUrl()
+                                .addOnSuccessListener(uri -> {
+                                    @SuppressLint("SimpleDateFormat")
+                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+                                    String date = simpleDateFormat.format(new Date());
+                                    HashMap<String, String> messageInfo = new HashMap<>();
+                                    messageInfo.put("text", "");
+                                    messageInfo.put("ownerId", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+                                    messageInfo.put("date", date);
+                                    messageInfo.put("photo", uri.toString());
+
+                                    FirebaseDatabase.getInstance().getReference().child("Chats")
+                                            .child(chatId)
+                                            .child("messages").push().setValue(messageInfo);
+                                });
+                    });
+        }
     }
 
     public void sendMessage(String chatId, String message, String date, Uri photo) {
@@ -144,11 +175,6 @@ public class ChatActivity extends AppCompatActivity {
             messageInfo.put("ownerId", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
             messageInfo.put("date", date);
             messageInfo.put("photo", "");
-        } else {
-            messageInfo.put("text", message);
-            messageInfo.put("ownerId", Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
-            messageInfo.put("date", date);
-            messageInfo.put("photo", photo.toString());
         }
 
         FirebaseDatabase.getInstance().getReference().child("Chats")

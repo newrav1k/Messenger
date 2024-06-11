@@ -136,11 +136,11 @@ public class RegisterActivity extends AppCompatActivity {
     private void uploadImage() {
         if (filePath != null) {
             String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-            FirebaseStorage.getInstance().getReference().child("images/" + uid)
+            FirebaseStorage.getInstance().getReference().child("images/").child("profile_images").child(uid)
                     .putFile(filePath).addOnSuccessListener(taskSnapshot -> {
                         Toast.makeText(getApplicationContext(), R.string.photo_uploaded_successfully, Toast.LENGTH_LONG).show();
 
-                        FirebaseStorage.getInstance().getReference().child("images/" + uid).getDownloadUrl()
+                        FirebaseStorage.getInstance().getReference().child("images/").child("profile_images").child(uid).getDownloadUrl()
                                 .addOnSuccessListener(uri -> FirebaseDatabase.getInstance().getReference()
                                         .child("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())

@@ -156,17 +156,15 @@ public class ProfileFragment extends Fragment {
     private void uploadImage() {
         if (filePath != null) {
             String uid = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-            Log.i(TAG, "uploadImage: FirebaseAuth get user id");
-            FirebaseStorage.getInstance().getReference().child("images/" + uid)
+            FirebaseStorage.getInstance().getReference().child("images/").child("profile_images").child(uid)
                     .putFile(filePath).addOnSuccessListener(taskSnapshot -> {
                         Toast.makeText(getContext(), R.string.photo_uploaded_successfully, Toast.LENGTH_LONG).show();
 
-                        FirebaseStorage.getInstance().getReference().child("images/" + uid).getDownloadUrl()
+                        FirebaseStorage.getInstance().getReference().child("images/").child("profile_images").child(uid).getDownloadUrl()
                                 .addOnSuccessListener(uri -> FirebaseDatabase.getInstance().getReference()
                                         .child("Users")
                                         .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                         .child("profile_image").setValue(uri.toString()));
-                        Log.i(TAG, "uploadImage: FirebaseStorage set image uri");
                     });
         }
     }
