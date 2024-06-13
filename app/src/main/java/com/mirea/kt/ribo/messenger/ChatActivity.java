@@ -127,7 +127,7 @@ public class ChatActivity extends AppCompatActivity {
                     Log.i(TAG, "ActivityResultLauncher: binding.enterMessage set text");
 //                    sendMessage(chatId, "", date, photoPath);
                     uploadImage();
-                    photoPath = null;
+//                    photoPath = null;
                     Log.i(TAG, "ActivityResultLauncher: call .sendMessage(chatId, \"\", date, photoPath)");
                 }
             });
@@ -141,11 +141,21 @@ public class ChatActivity extends AppCompatActivity {
 
     private void uploadImage() {
         if (photoPath != null) {
-            FirebaseStorage.getInstance().getReference().child("images/").child("Chats").child(chatId)
-                    .putFile(photoPath).addOnSuccessListener(taskSnapshot -> {
+            FirebaseStorage.getInstance().getReference()
+                    .child("images/")
+                    .child("Chats")
+                    .child(chatId)
+                    .child(photoPath.toString().replace("/", ""))
+                    .putFile(photoPath)
+                    .addOnSuccessListener(taskSnapshot -> {
                         Toast.makeText(getApplicationContext(), R.string.photo_uploaded_successfully, Toast.LENGTH_LONG).show();
 
-                        FirebaseStorage.getInstance().getReference().child("images/").child("Chats").child(chatId).getDownloadUrl()
+                        FirebaseStorage.getInstance().getReference()
+                                .child("images/")
+                                .child("Chats")
+                                .child(chatId)
+                                .child(photoPath.toString().replace("/", ""))
+                                .getDownloadUrl()
                                 .addOnSuccessListener(uri -> {
                                     @SuppressLint("SimpleDateFormat")
                                     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
@@ -159,6 +169,7 @@ public class ChatActivity extends AppCompatActivity {
                                     FirebaseDatabase.getInstance().getReference().child("Chats")
                                             .child(chatId)
                                             .child("messages").push().setValue(messageInfo);
+                                    photoPath = null;
                                 });
                     });
         }
