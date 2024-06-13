@@ -179,7 +179,6 @@ public class ChatActivity extends AppCompatActivity {
         if (chatId == null) {
             return;
         }
-
         HashMap<String, String> messageInfo = new HashMap<>();
         if (photo == null) {
             messageInfo.put("text", message);
