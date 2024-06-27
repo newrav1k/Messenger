@@ -49,4 +49,6 @@ dependencies {
     implementation libs.circleimageview
     implementation libs.glide
     implementation libs.okhttp
+
+    implementation libs.firebase.dynamic.links
 }

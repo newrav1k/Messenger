@@ -1,6 +1,7 @@
 package com.mirea.kt.ribo.messenger;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +15,10 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.mirea.kt.ribo.messenger.databinding.ActivityLoginBinding;
 
 import java.util.Objects;
@@ -22,6 +26,7 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
     private final String TAG = "LoginActivity";
     private ActivityLoginBinding binding;
+    private Uri deepLink;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,11 +58,15 @@ public class LoginActivity extends AppCompatActivity {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), R.string.successful_authorization, Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(getApplicationContext(), MessengerActivity.class));
-                                Log.i(TAG, "onCreate: start MessengerActivity");
-                                finish();
-                                Log.i(TAG, "onCreate: call .finish()");
+                                if (Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).isEmailVerified()) {
+                                    Toast.makeText(getApplicationContext(), R.string.successful_authorization, Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(getApplicationContext(), MessengerActivity.class));
+                                    Log.i(TAG, "onCreate: start MessengerActivity");
+                                    finish();
+                                    Log.i(TAG, "onCreate: call .finish()");
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "Вы не перешли по ссылке подтверждения", Toast.LENGTH_LONG).show();
+                                }
                             } else {
                                 Toast.makeText(getApplicationContext(), R.string.incorrect_email_or_password, Toast.LENGTH_LONG).show();
                             }

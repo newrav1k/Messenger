@@ -20,8 +20,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.google.firebase.storage.FirebaseStorage;
 import com.mirea.kt.ribo.messenger.databinding.ActivityMessengerBinding;
 import com.mirea.kt.ribo.messenger.databinding.ActivityRegisterBinding;
@@ -34,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
     private final String TAG = "RegisterActivity";
     private ActivityRegisterBinding binding;
     private Uri filePath;
+    private Uri deepLink;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -87,9 +94,16 @@ public class RegisterActivity extends AppCompatActivity {
                                         Log.i(TAG, "onCreate: FirebaseDatabase set value user_info");
                                         uploadImage();
                                         Log.i(TAG, "onCreate: call .uploadImage()");
-                                        Toast.makeText(getApplicationContext(), R.string.successful_registration, Toast.LENGTH_LONG).show();
-                                        startActivity(new Intent(getApplicationContext(), MessengerActivity.class));
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        if (user != null) {
+                                            user.sendEmailVerification().addOnCompleteListener(task1 -> {
+                                                if (task1.isSuccessful()) {
+                                                    Toast.makeText(getApplicationContext(), "Ссылка на подтверждение отправлена", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+                                        }
                                         finish();
+
                                     } else {
                                         Toast.makeText(getApplicationContext(), R.string.account_already_exists, Toast.LENGTH_LONG).show();
                                     }
